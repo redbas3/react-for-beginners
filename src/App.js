@@ -2,32 +2,36 @@ import { useEffect, useState } from "react";
 import Button from "./Button";
 
 function App() {
-  const [counter, setCounter] = useState(0);
-  const [keyword, setKeyword] = useState("");
-  const increment = () => setCounter((prev)=> prev + 1);
-  const onChange = (event) => setKeyword(event.target.value);
-  console.log("i run all the time");
-  const iRunOnlyOnce = () => {
-    console.log('I run only once');
+  const [toDo, setToDo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (e) => {
+    setToDo(e.target.value);
   }
-  useEffect(() => {
-    iRunOnlyOnce();
-  }, []);
-  useEffect(() => {
-    if(keyword !== "" && keyword.length > 5) {
-      console.log("Search for: ", keyword);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log(toDo);
+    if (toDo === "") {
+      return;
     }
-  }, [keyword]);
-  useEffect(() => {
-    console.log("Counter changed to: ", counter);
-  }, [counter]);
-
+    setToDos(currentArray => [toDo, ...currentArray]);
+    setToDo("");
+  }
+  console.log(toDos);
   return (
     <div>
-      <input type="text" placeholder="search here..." value={keyword} onChange={onChange} />
-      <h1>Welcome back!</h1>
-      <p>Counter: {counter}</p>
-      <Button text={"Click me!"} onClick={increment} />
+      <h1>My To Dos ({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input value={toDo} type="text" placeholder="Write your todo" onChange={onChange}/>
+        <button>Add To Do</button>
+      </form>
+      <hr/>
+      <ul>
+      {toDos.map((toDo, index) => (
+        <li key={index}>
+          {toDo}
+        </li>
+      ))}
+      </ul>
     </div>
   );
 }
